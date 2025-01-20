@@ -1,3 +1,12 @@
+<script setup>
+import {onMounted, ref} from 'vue'
+import { useTaskStore } from '@/stores/tasksStore';
+
+let tasksStore = useTaskStore();
+  
+
+</script>
+
 <template>
     <div>
       <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">📊 Дашборд</h2>
@@ -7,24 +16,21 @@
         <!-- Карточка "Всего задач" -->
         <div class="p-6 rounded-lg shadow bg-white dark:bg-gray-800">
           <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Всего задач</h3>
-          <p class="text-3xl font-bold text-blue-500 dark:text-blue-400 mt-2">42</p>
+          <p class="text-3xl font-bold text-blue-500 dark:text-blue-400 mt-2">{{tasksStore.tasksArr.length}}</p>
         </div>
   
         <!-- Карточка "Завершено" -->
+      
         <div class="p-6 rounded-lg shadow bg-white dark:bg-gray-800">
           <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Завершено</h3>
-          <p class="text-3xl font-bold text-green-500 dark:text-green-400 mt-2">28</p>
+          <p class="text-3xl font-bold text-green-500 dark:text-green-400 mt-2">{{ tasksStore.endedTasks.length }}</p>
         </div>
   
         <!-- Карточка "В работе" -->
         <div class="p-6 rounded-lg shadow bg-white dark:bg-gray-800">
           <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">В работе</h3>
-          <p class="text-3xl font-bold text-red-500 dark:text-red-400 mt-2">14</p>
+          <p class="text-3xl font-bold text-red-500 dark:text-red-400 mt-2">{{ tasksStore.inProcesTasks.length }}</p>
         </div>
       </div>
     </div>
   </template>
-
-<script setup>
-
-</script>
