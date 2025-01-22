@@ -1,20 +1,30 @@
 <script setup>
 const props = defineProps({
-  title: String,
-  creator: String,
-  description: String,
-  status: String,
-})
+  element: Object,
+  isEdit: Boolean,
+  isSelect: Boolean,
+  toogleSelection: Function,
+});
 </script>
 
 <template>
-    <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800">
-              <h3 class="font-medium text-gray-800 dark:text-gray-200">{{title}}</h3>
-              <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">{{creator}}</p>
-              <div class="mt-2 flex items-center space-x-2">
-                <span class="text-sm text-gray-500 dark:text-gray-400">{{creator}}</span>
-                <span class="text-sm text-gray-500 dark:text-gray-400">•</span>
-                <span class="text-sm text-gray-500 dark:text-gray-400">{{ status }}</span>
-              </div>
-            </div>
+  <div v-if="element" class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800">
+    <h3 class="font-medium text-gray-800 dark:text-gray-200">{{ element.title }}</h3>
+    <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">{{ element.description }}</p>
+    <div class="mt-2 flex items-center space-x-2">
+      <span class="text-sm text-gray-500 dark:text-gray-400">{{ element.creator }}</span>
+      <span class="text-sm text-gray-500 dark:text-gray-400">•</span>
+      <span class="text-sm text-gray-500 dark:text-gray-400">{{ element.status }}</span>
+      <div 
+        v-if="isEdit" 
+        @click="toogleSelection(element)" 
+        class="absolute top-2 right-2 w-6 h-6 border-2 border-black rounded-md flex items-center justify-center cursor-pointer bg-white hover:border-blue-500"
+      >
+        <span v-if="isSelect" class="checkmark">✔</span>
+      </div>
+    </div>
+  </div>
+  <div v-else>
+    <p>Задача не найдена.</p>
+  </div>
 </template>

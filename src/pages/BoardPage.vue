@@ -1,5 +1,5 @@
 <script setup>
-import {ref, watch, } from 'vue';
+import {ref, watch } from 'vue';
 import draggable from 'vuedraggable';
 import ModalWindow from '@/components/ModalWindow.vue';
 import TaskCard from '@/components/TaskCard.vue';
@@ -8,13 +8,17 @@ import { endsWith } from 'lodash';
 
 const tasksStore = useTaskStore();
 let isEdit = ref(false);
-let checkArr = ref([]);
+
 
 const changeEdit = () => {
   isEdit.value = !isEdit.value;
   if(isEdit.value == false) {
     tasksStore.patchTasks();
   }
+}
+
+const toogleSelection = (element) => {
+  element.isSelect = !element.isSelect;
 }
 
 </script>
@@ -27,6 +31,7 @@ const changeEdit = () => {
         <p class="text-gray-600 dark:text-gray-400">Задачи, разделённые по статусам.</p>
       </div>
       <div class="flex space-x-2">
+        <button v-if="isEdit" @click="tasksStore.deleteSelectedTasks" class="px-3 py-1.5 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm">Удалить выбранные задачи</button>
         <button @click="changeEdit" class="px-3 py-1.5 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm">
           {{ isEdit ? "Отменить редактирование" : "Режим редактирования" }}
         </button>
@@ -47,10 +52,10 @@ const changeEdit = () => {
         >
           <template #item="{ element }">
             <TaskCard
-              :creator="element.creator"
-              :title="element.title"
-              :description="element.description"
-              :status="element.status"
+              :element="element"
+              :isEdit="isEdit"
+              :is-select="element.isSelect"
+              :toogleSelection="toogleSelection"
               :class="{ shake: isEdit }"
               class="mb-4"
             />
@@ -70,10 +75,10 @@ const changeEdit = () => {
         >
           <template #item="{ element }">
             <TaskCard
-              :creator="element.creator"
-              :title="element.title"
-              :description="element.description"
-              :status="element.status"
+              :element="element"
+              :isEdit="isEdit"
+              :is-select="element.isSelect"
+              :toogleSelection="toogleSelection"
               :class="{ shake: isEdit }"
               class="mb-4"
             />
@@ -93,10 +98,10 @@ const changeEdit = () => {
         >
           <template #item="{ element }">
             <TaskCard
-              :creator="element.creator"
-              :title="element.title"
-              :description="element.description"
-              :status="element.status"
+              :element="element"
+              :isEdit="isEdit"
+              :is-select="element.isSelect"
+              :toogleSelection="toogleSelection"
               :class="{ shake: isEdit }"
               class="mb-4"
             />
@@ -110,13 +115,13 @@ const changeEdit = () => {
 <style scoped>
 @keyframes shake {
   0% { transform: rotate(0deg); }
-  25% { transform: rotate(2deg); }
+  25% { transform: rotate(1.5deg); }
   50% { transform: rotate(0deg); }
-  75% { transform: rotate(2deg); }
+  75% { transform: rotate(1.5deg); }
   100% { transform: rotate(0deg); }
 }
 
 .shake {
-  animation: shake 0.35s infinite;
+  animation: shake 0.8s infinite;
 }
 </style>
