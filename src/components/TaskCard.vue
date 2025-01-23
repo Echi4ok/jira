@@ -4,6 +4,7 @@ const props = defineProps({
   isEdit: Boolean,
   isSelect: Boolean,
   toogleSelection: Function,
+  editFunction: Function,
 });
 </script>
 
@@ -22,9 +23,11 @@ const props = defineProps({
       >
         <span v-if="isSelect" class="checkmark">✔</span>
       </div>
+      <button v-if="isEdit" @click="props.editFunction(element)" class="absolute top-15 right-2 h-6 p-1 border border-gray-300 rounded-md flex items-center justify-center cursor-pointer bg-blue-500 text-white text-sm font-medium hover:bg-blue-600 transition-colors duration-200">Редактировать</button>
     </div>
   </div>
   <div v-else>
     <p>Задача не найдена.</p>
   </div>
 </template>
+

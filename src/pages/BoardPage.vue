@@ -8,7 +8,8 @@ import { endsWith } from 'lodash';
 
 const tasksStore = useTaskStore();
 let isEdit = ref(false);
-
+let isShowWindow = ref(false);
+let checkmark = ref(false); // побочная переменная для того чтобы в модальном окне было показано когда мы создаем задачу а когда редактируем
 
 const changeEdit = () => {
   isEdit.value = !isEdit.value;
@@ -20,6 +21,29 @@ const changeEdit = () => {
 const toogleSelection = (element) => {
   element.isSelect = !element.isSelect;
 }
+
+
+const createTask = () => { // отрабатывает когда пользователь нажал на кнопку "Создать задачу"
+  if(!isEdit.value) { // если мы находимся в режиме редактирования то нельзя еще одновременно создавать задачу
+    isShowWindow.value = true; // показываем модальное окно 
+  } else {
+    alert('Нельзя создавать задачи в режиме редактирования')
+  }
+}
+
+const cancelTask = () => { // "отмена" модального окна, тоесть мы его закрываем
+  // тут надо сделать очистку инпутов если пользователь туда что то ввел, пока что оно очищается само как то я хз
+  isShowWindow.value = false;
+  checkmark.value = false;
+}
+
+const editFunction = (element) => { // вызывается из taskCard.vue для того чтобы отредактировать задачу
+  isEdit.value = false;
+  isShowWindow.value = true;
+  checkmark.value = true;
+  console.log(element);
+}
+
 
 </script>
 
@@ -35,7 +59,10 @@ const toogleSelection = (element) => {
         <button @click="changeEdit" class="px-3 py-1.5 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm">
           {{ isEdit ? "Отменить редактирование" : "Режим редактирования" }}
         </button>
-        <ModalWindow />
+        <button @click="createTask" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-200">
+          Создать задачу
+        </button>
+        <ModalWindow v-if="isShowWindow" :cancelTask="cancelTask" :checkmark="checkmark"/>
       </div>
     </div>
 
@@ -56,6 +83,7 @@ const toogleSelection = (element) => {
               :isEdit="isEdit"
               :is-select="element.isSelect"
               :toogleSelection="toogleSelection"
+              :editFunction="editFunction"
               :class="{ shake: isEdit }"
               class="mb-4"
             />
@@ -79,6 +107,7 @@ const toogleSelection = (element) => {
               :isEdit="isEdit"
               :is-select="element.isSelect"
               :toogleSelection="toogleSelection"
+              :editFunction="editFunction"
               :class="{ shake: isEdit }"
               class="mb-4"
             />
@@ -102,6 +131,7 @@ const toogleSelection = (element) => {
               :isEdit="isEdit"
               :is-select="element.isSelect"
               :toogleSelection="toogleSelection"
+              :editFunction="editFunction"
               :class="{ shake: isEdit }"
               class="mb-4"
             />
