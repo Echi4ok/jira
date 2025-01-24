@@ -80,6 +80,20 @@ export const useTaskStore = defineStore('taskStore', () => {
     alert('Произошла ошибка');
   });
   }
+
+  function patchOneTask(updatedTask) { 
+    // тут надо написать алгоритм для того чтобы ui мнгновенно обновлялся, а то обновляются изменения только на серваке
+    console.log(updatedTask)
+    axios.patch(`https://f8385ab52a8f6d50.mokky.dev/tasks/${updatedTask.id}`, updatedTask)
+    .then((res) => {
+      console.log(res);
+      alert('Данные успешно обновлены');
+    })
+    .catch((err) => {
+      console.error(err); 
+      alert('Произошла ошибка');
+    });
+    }
  // Plan, InProces, Ended
  const updateTaskStatus = (targetColumn) => {
   if (targetColumn === 'Plan') {
@@ -108,5 +122,5 @@ export const useTaskStore = defineStore('taskStore', () => {
   
 
   onMounted(getTasks);
-  return { getTasks, tasksArr, endedTasks, inProcesTasks, inPlanTasks, filterEnd, filterInProces, filterInPlan, updateTaskStatus, patchTasks, postTask, deleteSelectedTasks }
+  return { getTasks, tasksArr, endedTasks, inProcesTasks, inPlanTasks, filterEnd, filterInProces, filterInPlan, updateTaskStatus, patchTasks, postTask, deleteSelectedTasks, patchOneTask }
 })

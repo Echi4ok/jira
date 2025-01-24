@@ -39,13 +39,13 @@ const cancelTask = () => { // "отмена" модального окна, то
 }
 
 const editFunction = (element) => { // вызывается из taskCard.vue для того чтобы отредактировать задачу
-  isEdit.value = false;
-  isShowWindow.value = true;
-  checkmark.value = true;
+  isEdit.value = false; // выходим из режима редатирования
+  isShowWindow.value = true; // открываем модальное окно для реадктирования задачи
+  checkmark.value = true; // показываем модальному окну, что оно должно открыться не для создания, а для редактирования задачи
   objForEditWindow.value = {...element}; // сохраняем обьект в переменную 
 }
 
-const creatTask = () => {
+const closeWindow = () => {
   isShowWindow.value = false;
 }
 
@@ -70,7 +70,7 @@ const deleteTasks = () => {
         <button @click="createTask" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-200">
           Создать задачу
         </button>
-        <ModalWindow v-if="isShowWindow" :cancelTask="cancelTask" :checkmark="checkmark" :creatTask="creatTask" :objForEditWindow="objForEditWindow"/>
+        <ModalWindow v-if="isShowWindow" :cancelTask="cancelTask" :checkmark="checkmark" :closeWindow="closeWindow" :objForEditWindow="objForEditWindow" :isShowWindow="isShowWindow"/>
       </div>
     </div>
 

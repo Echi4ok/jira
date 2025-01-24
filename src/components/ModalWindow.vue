@@ -2,6 +2,7 @@
 import {reactive, ref} from 'vue';
 import TaskCard from './TaskCard.vue';
 import { useTaskStore } from '@/stores/tasksStore';
+import { update } from 'lodash';
 
 let tasksStore = useTaskStore();
 let title = ref('');
@@ -12,13 +13,14 @@ let status = ref('В плане');
 
 const props = defineProps({
   cancelTask: Function,
-  creatTask: Function,
+  closeWindow: Function,
   checkmark: Boolean,
   objForEditWindow: Object,
+  isShowWindow: Boolean,
 })
 
-const saveTask = () => {
-  props.creatTask();
+const createTask = () => {
+  props.closeWindow();
   const newTask = {
     creator: creator.value,
     title: title.value,
@@ -36,9 +38,24 @@ const saveTask = () => {
 }
 
 
-// const editFunction = () => {
-//   console.log(objForEditWindow.value)
-// }
+if(props.checkmark) {
+  title.value = props.objForEditWindow.title 
+  description.value = props.objForEditWindow.description 
+  creator.value = props.objForEditWindow.creator 
+  status.value = props.objForEditWindow.status 
+}
+
+const updateTask = () => {
+  let updatedTask = ({
+    title: title.value,
+    description: description.value,
+    creator: creator.value,
+    status: status.value,
+    id: props.objForEditWindow.id,
+  })
+  tasksStore.patchOneTask(updatedTask) // отправляем изменения таски на сервер
+  props.closeWindow();// закрываем окно
+}
 </script>
 
 <template>
@@ -69,7 +86,8 @@ const saveTask = () => {
           </div>
           <div class="flex justify-end">
             <button type="button" @click="props.cancelTask()" class="mr-2 px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition duration-200">Отмена</button>
-            <button type="button" @click="saveTask" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-200">{{ props.checkmark ? "Сохранить" : "Создать"}}</button>
+            <button v-if="!props.checkmark" type="button" @click="createTask" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-200">Создать</button>
+            <button v-else type="button" @click="updateTask" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-200">Сохранить</button>
           </div>
         </form>
       </div>
