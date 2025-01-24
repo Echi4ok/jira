@@ -12,10 +12,13 @@ let status = ref('В плане');
 
 const props = defineProps({
   cancelTask: Function,
+  creatTask: Function,
   checkmark: Boolean,
+  objForEditWindow: Object,
 })
 
 const saveTask = () => {
+  props.creatTask();
   const newTask = {
     creator: creator.value,
     title: title.value,
@@ -32,6 +35,10 @@ const saveTask = () => {
   tasksStore.postTask(newTask);
 }
 
+
+// const editFunction = () => {
+//   console.log(objForEditWindow.value)
+// }
 </script>
 
 <template>

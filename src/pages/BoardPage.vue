@@ -10,6 +10,7 @@ const tasksStore = useTaskStore();
 let isEdit = ref(false);
 let isShowWindow = ref(false);
 let checkmark = ref(false); // побочная переменная для того чтобы в модальном окне было показано когда мы создаем задачу а когда редактируем
+let objForEditWindow = ref();
 
 const changeEdit = () => {
   isEdit.value = !isEdit.value;
@@ -41,10 +42,17 @@ const editFunction = (element) => { // вызывается из taskCard.vue д
   isEdit.value = false;
   isShowWindow.value = true;
   checkmark.value = true;
-  console.log(element);
+  objForEditWindow.value = {...element}; // сохраняем обьект в переменную 
 }
 
+const creatTask = () => {
+  isShowWindow.value = false;
+}
 
+const deleteTasks = () => {
+  isEdit.value = false;
+  tasksStore.deleteSelectedTasks();
+}
 </script>
 
 <template>
@@ -55,14 +63,14 @@ const editFunction = (element) => { // вызывается из taskCard.vue д
         <p class="text-gray-600 dark:text-gray-400">Задачи, разделённые по статусам.</p>
       </div>
       <div class="flex space-x-2">
-        <button v-if="isEdit" @click="tasksStore.deleteSelectedTasks" class="px-3 py-1.5 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm">Удалить выбранные задачи</button>
+        <button v-if="isEdit" @click="deleteTasks" class="px-3 py-1.5 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm">Удалить выбранные задачи</button>
         <button @click="changeEdit" class="px-3 py-1.5 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm">
           {{ isEdit ? "Отменить редактирование" : "Режим редактирования" }}
         </button>
         <button @click="createTask" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-200">
           Создать задачу
         </button>
-        <ModalWindow v-if="isShowWindow" :cancelTask="cancelTask" :checkmark="checkmark"/>
+        <ModalWindow v-if="isShowWindow" :cancelTask="cancelTask" :checkmark="checkmark" :creatTask="creatTask" :objForEditWindow="objForEditWindow"/>
       </div>
     </div>
 
