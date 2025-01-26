@@ -1,4 +1,4 @@
-import { ref, computed, onMounted, watchEffect } from 'vue'
+import { ref, computed, onMounted, watchEffect, watch } from 'vue'
 import { cloneDeep } from 'lodash'
 import { defineStore } from 'pinia'
 import axios from 'axios'
@@ -37,7 +37,7 @@ export const useTaskStore = defineStore('taskStore', () => {
       tasksArr.value = tasksArr.value.map((task) => { // на стороне клиента добавляем у каждого обьекта поле isSelect
         return task = {...task, isSelect: false};
       })
-      console.log(res.data);
+      console.log(tasksArr.value);
       if(tasksArr.value.length) {
         endedTasks.value = cloneDeep(tasksArr.value); // делаем копии оригинального массива
         inProcesTasks.value = cloneDeep(tasksArr.value); // делаем копии оригинального массива
@@ -82,7 +82,6 @@ export const useTaskStore = defineStore('taskStore', () => {
   }
 
   function patchOneTask(updatedTask) { 
-    // тут надо написать алгоритм для того чтобы ui мнгновенно обновлялся, а то обновляются изменения только на серваке
     console.log(updatedTask)
     axios.patch(`https://f8385ab52a8f6d50.mokky.dev/tasks/${updatedTask.id}`, updatedTask)
     .then((res) => {
@@ -108,7 +107,13 @@ export const useTaskStore = defineStore('taskStore', () => {
   function postTask (newTask) {
     axios.post("https://f8385ab52a8f6d50.mokky.dev/tasks", newTask)
     .then((res) => {
-      console.log(res)
+      if(newTask.status == "В плане") {
+        inPlanTasks.value.push(res.data);
+      } else if(newTask.status == "В работе") {
+        inProcesTasks.value.push(res.data);
+      } else if (newTask.status == "Завершено") {
+        endedTasks.value.push(res.data);
+      } 
       alert('Новая таска успешно создана')
     }).catch((err) => {
       console.log(err)

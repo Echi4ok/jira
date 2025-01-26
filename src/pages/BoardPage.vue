@@ -11,7 +11,7 @@ let isEdit = ref(false);
 let isShowWindow = ref(false);
 let checkmark = ref(false); // побочная переменная для того чтобы в модальном окне было показано когда мы создаем задачу а когда редактируем
 let objForEditWindow = ref();
-
+let objElement = ref();
 const changeEdit = () => {
   isEdit.value = !isEdit.value;
   if(isEdit.value == false) {
@@ -34,6 +34,7 @@ const createTask = () => { // отрабатывает когда пользов
 
 const cancelTask = () => { // "отмена" модального окна, тоесть мы его закрываем
   // тут надо сделать очистку инпутов если пользователь туда что то ввел, пока что оно очищается само как то я хз
+  
   isShowWindow.value = false;
   checkmark.value = false;
 }
@@ -43,6 +44,7 @@ const editFunction = (element) => { // вызывается из taskCard.vue д
   isShowWindow.value = true; // открываем модальное окно для реадктирования задачи
   checkmark.value = true; // показываем модальному окну, что оно должно открыться не для создания, а для редактирования задачи
   objForEditWindow.value = {...element}; // сохраняем обьект в переменную 
+  objElement.value = element;
 }
 
 const closeWindow = () => {
@@ -70,7 +72,7 @@ const deleteTasks = () => {
         <button @click="createTask" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-200">
           Создать задачу
         </button>
-        <ModalWindow v-if="isShowWindow" :cancelTask="cancelTask" :checkmark="checkmark" :closeWindow="closeWindow" :objForEditWindow="objForEditWindow" :isShowWindow="isShowWindow"/>
+        <ModalWindow v-if="isShowWindow" :cancelTask="cancelTask" :checkmark="checkmark" :closeWindow="closeWindow" :objElement="objElement" :objForEditWindow="objForEditWindow" :isShowWindow="isShowWindow"/>
       </div>
     </div>
 

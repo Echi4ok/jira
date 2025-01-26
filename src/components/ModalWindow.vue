@@ -17,6 +17,7 @@ const props = defineProps({
   checkmark: Boolean,
   objForEditWindow: Object,
   isShowWindow: Boolean,
+  objElement: Object,
 })
 
 const createTask = () => {
@@ -27,13 +28,6 @@ const createTask = () => {
     description: description.value,
     status: status.value,
   }
-  if(newTask.status == "В плане") {
-      tasksStore.inPlanTasks.push(newTask);
-    } else if(newTask.status == "В работе") {
-      tasksStore.inProcesTasks.push(newTask);
-    } else if (newTask.status == "Завершено") {
-      tasksStore.endedTasks.push(newTask);
-    } 
   tasksStore.postTask(newTask);
 }
 
@@ -46,13 +40,12 @@ if(props.checkmark) {
 }
 
 const updateTask = () => {
-  let updatedTask = ({
+  const updatedTask = Object.assign(props.objElement, {
     title: title.value,
     description: description.value,
     creator: creator.value,
     status: status.value,
-    id: props.objForEditWindow.id,
-  })
+  });
   tasksStore.patchOneTask(updatedTask) // отправляем изменения таски на сервер
   props.closeWindow();// закрываем окно
 }
