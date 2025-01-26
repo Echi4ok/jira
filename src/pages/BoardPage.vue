@@ -153,9 +153,9 @@ const deleteTasks = () => {
 <style scoped>
 @keyframes shake {
   0% { transform: rotate(0deg); }
-  25% { transform: rotate(1.5deg); }
+  25% { transform: rotate(1deg); }
   50% { transform: rotate(0deg); }
-  75% { transform: rotate(1.5deg); }
+  75% { transform: rotate(1deg); }
   100% { transform: rotate(0deg); }
 }
 
