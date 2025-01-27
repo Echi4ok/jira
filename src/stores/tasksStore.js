@@ -85,8 +85,23 @@ export const useTaskStore = defineStore('taskStore', () => {
     console.log(updatedTask)
     axios.patch(`https://f8385ab52a8f6d50.mokky.dev/tasks/${updatedTask.id}`, updatedTask)
     .then((res) => {
-      console.log(res);
-      alert('Данные успешно обновлены');
+      let responseTask = res.data;
+      inPlanTasks.value = inPlanTasks.value.filter((el) => el.id !== responseTask.id);
+      inProcesTasks.value = inProcesTasks.value.filter((el) => el.id !== responseTask.id);
+      endedTasks.value = endedTasks.value.filter((el) => el.id !== responseTask.id);
+
+      switch (responseTask.status) {
+        case "В плане" :
+        inPlanTasks.value.push(responseTask);
+        break;  
+        case "В работе" :
+        inProcesTasks.value.push(responseTask);
+        break;
+        case "Завершено" :
+        endedTasks.value.push(responseTask);
+        break;
+      }
+      alert('Данные таски успешно обновлены');
     })
     .catch((err) => {
       console.error(err); 
@@ -121,6 +136,7 @@ export const useTaskStore = defineStore('taskStore', () => {
     })
   }
 
+ 
 
 
 // сдлеать так чтобы если пользователь не сделает изменений то не отправлять запрос на сервер
